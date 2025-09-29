@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,Depends
 from src.config.db import client
 from src.models.models import UserLogin 
-from src.functions.encryption import password_hasing ,verify_password
+from src.functions.encryption import password_hasing ,verify_password, create_jwt
+from src.auth.auth import use_token
 Route=APIRouter()
 
 try:
@@ -36,7 +37,15 @@ def login (user:UserLogin):
      finally :
           if found:
                if verify_password(user.password,found.get("password")):
-                    return {"message":"login sucess"}
+                    access_token=create_jwt(
+                    username={"sub":found["username"]}
+                    )
+                    return {"access_token":access_token,"token_type":"bearer"}
                else :
                     return {"message":"wrong password"}
            
+@Route.get("/userdata")
+async def user_data(current:dict=Depends(use_token)):
+     return{
+          "username":current["username"],
+     }
