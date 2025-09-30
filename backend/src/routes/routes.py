@@ -15,7 +15,7 @@ except Exception as e:
 def First_msg():
     return {"message":"hello and welcome"}
 
-@Route.post("/signin")
+@Route.post("/signup")
 def sign_in(user:UserLogin):
      
      user.password=password_hasing(user.password)
