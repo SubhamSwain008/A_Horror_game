@@ -49,3 +49,24 @@ async def user_data(current:dict=Depends(use_token)):
      return{
           "username":current["username"],
      }
+
+@Route.put("/newgame")
+async def new_game(current:dict=Depends(use_token)):
+      user=client.The_forest.user_data.find_one({"username":current["username"]})
+      if not user:
+           return {"_message":"user not found may be try login first"}
+      
+      updates={
+           "character_eval":"beginer ",
+   "chapter":0,
+    "conversations":[],
+      }
+      updated=client.The_forest.user_data.update_one({"username":current["username"]},
+                                                     {"$set":updates})
+      
+      if updated.modified_count!=0:
+           return {"_message":"new game initiated"}
+      else :
+           return {"_message":"new game not initiated"}
+      
+           

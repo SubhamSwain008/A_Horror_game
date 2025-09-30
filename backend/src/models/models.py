@@ -13,6 +13,7 @@ class UserInDB(BaseModel):
     username:str
     password:str
     character_eval:str
+    chapter:str
     conversations:List[conversations]
     
 

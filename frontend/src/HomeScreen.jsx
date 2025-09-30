@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useEffect,useState,useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import NewGame from "./functions/new_game.js";
 export default function HomeScreen(){
 const nav=useNavigate();
 
@@ -43,6 +44,8 @@ useEffect(()=>{
     return (<>
     <h1>The Forest</h1>
    {username&&<h1>Welcome {username}</h1>} 
+   <button onClick={()=>NewGame()}>new game</button>
    <button onClick={()=>{logout()}}>logout</button>
+   
     </>)
 }
