@@ -16,4 +16,5 @@ class UserInDB(BaseModel):
     chapter:str
     conversations:List[conversations]
     
-
+class NextChapter(BaseModel):
+    chapter:int

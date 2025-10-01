@@ -1,0 +1,55 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+export default function GameScreen() {
+  const [current_chap, setCurrentChap] = useState(0);
+  const [current_story, setCurrentStory] = useState("");
+  
+
+  // Fetch initial data
+  useEffect(() => {
+    (async () => {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:8000/all_user_data", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(res.data);
+      setCurrentChap(Number(res.data.chapter));
+      setCurrentStory(res.data.story.story);
+    })();
+  }, []);
+
+  // Update backend whenever chapter changes
+  useEffect(() => {
+    if (current_chap === 0) return; // skip initial mount
+    setCurrentStory("loading please wait");
+    (async () => {
+      const token = localStorage.getItem("token");
+      console.log(current_chap)
+      const res = await axios.put(
+        "http://localhost:8000/nextchapter",
+        { chapter: current_chap },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res.data);
+      setCurrentStory(res.data.story.story)
+    })();
+  }, [current_chap]);
+
+  return (
+    <div>
+      <h1>Chapter: {current_chap}</h1>
+      <h2>{current_story}</h2>
+      {/* Fix: pass function reference, do not mutate state directly */}
+      <button onClick={() => setCurrentChap((c) => c + 1)}>Next</button>
+    </div>
+  );
+}

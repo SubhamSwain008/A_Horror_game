@@ -33,8 +33,15 @@ catch(e){
 }
 
 function logout(){
-   localStorage.setItem("token",null);
+   localStorage.setItem("token","");
 nav("/login")
+}
+
+function New_game(){
+    if(localStorage.getItem("token")!=""){
+        NewGame();
+    nav("/game");
+    }
 }
 
 useEffect(()=>{
@@ -43,8 +50,12 @@ useEffect(()=>{
 
     return (<>
     <h1>The Forest</h1>
-   {username&&<h1>Welcome {username}</h1>} 
-   <button onClick={()=>NewGame()}>new game</button>
+   {username?<h1>Welcome {username}</h1>:<h1>user not found please click on logout and login again</h1>} 
+   
+   
+   <button onClick={()=>{
+    New_game();
+   }}>new game</button>
    <button onClick={()=>{logout()}}>logout</button>
    
     </>)

@@ -1,8 +1,9 @@
 from fastapi import APIRouter,Depends
 from src.config.db import client
-from src.models.models import UserLogin 
+from src.models.models import UserLogin ,NextChapter
 from src.functions.encryption import password_hasing ,verify_password, create_jwt
 from src.auth.auth import use_token
+from story import story_array
 Route=APIRouter()
 
 try:
@@ -16,7 +17,7 @@ def First_msg():
     return {"message":"hello and welcome"}
 
 @Route.post("/signup")
-def sign_in(user:UserLogin):
+def signup(user:UserLogin):
      
      user.password=password_hasing(user.password)
      try:
@@ -68,5 +69,37 @@ async def new_game(current:dict=Depends(use_token)):
            return {"_message":"new game initiated"}
       else :
            return {"_message":"new game not initiated"}
+     
+@Route.get("/all_user_data")
+async def user_profile(current:dict=Depends(use_token)):
+
+      user=client.The_forest.user_data.find_one({"username":current["username"]})
+      if not user:
+           return {"_message":"user not found may be try login first"}
       
-           
+     #  print(user)
+      user_data={'username':user['username'],
+                 'chapter':user['chapter'],
+                 'story':story_array[user['chapter']]
+                 }
+      return user_data
+      
+@Route.put("/nextchapter")
+async def next_chapter(chapter:NextChapter,current:dict=Depends(use_token)):
+     print(chapter.chapter,len(story_array))
+     user=client.The_forest.user_data.find_one({"username":current["username"]})
+     
+
+     if not user:
+           return {"_message":"user not found may be try login first"}
+     if chapter.chapter<len(story_array):
+          updates={"chapter":chapter.chapter}
+          updated=client.The_forest.user_data.update_one({"username":current["username"]},
+                                                       {"$set":updates})
+          return {'story':story_array[chapter.chapter]}
+     else:
+          updates={"chapter":0}
+          updated=client.The_forest.user_data.update_one({"username":current["username"]},
+                                                     {"$set":updates})
+          return {'story':story_array[0]}
+   
