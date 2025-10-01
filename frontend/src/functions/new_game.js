@@ -2,8 +2,7 @@ import axios from "axios";
 export default async function NewGame(){
 
     try{
-        const token=localStorage.getItem("token")
-        console.log(token)
+        const token=localStorage.getItem("token");
         const res=await axios.put("http://localhost:8000/newgame",{}, {
           headers: {
             Authorization: `Bearer ${token}`,

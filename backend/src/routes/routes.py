@@ -101,5 +101,5 @@ async def next_chapter(chapter:NextChapter,current:dict=Depends(use_token)):
           updates={"chapter":0}
           updated=client.The_forest.user_data.update_one({"username":current["username"]},
                                                      {"$set":updates})
-          return {'story':story_array[0]}
+          return {'story':{"story":"End cerdits"}}
    

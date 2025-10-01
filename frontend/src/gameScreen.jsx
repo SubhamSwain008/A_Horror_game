@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function GameScreen() {
   const [current_chap, setCurrentChap] = useState(0);
   const [current_story, setCurrentStory] = useState("");
-  
+  const nav=useNavigate();
 
   // Fetch initial data
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function GameScreen() {
       <h2>{current_story}</h2>
       {/* Fix: pass function reference, do not mutate state directly */}
       <button onClick={() => setCurrentChap((c) => c + 1)}>Next</button>
+      <button onClick={()=>nav('/home')}>Home</button>
     </div>
   );
 }

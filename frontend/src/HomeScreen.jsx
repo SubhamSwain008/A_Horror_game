@@ -56,6 +56,7 @@ useEffect(()=>{
    <button onClick={()=>{
     New_game();
    }}>new game</button>
+   <button onClick={()=>nav("/game")} >Continue</button>
    <button onClick={()=>{logout()}}>logout</button>
    
     </>)
