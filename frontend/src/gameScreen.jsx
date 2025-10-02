@@ -7,8 +7,12 @@ export default function GameScreen() {
   const [current_story, setCurrentStory] = useState("");
   const [options, setOptions] = useState([]);
   const [changeColor,setChangeColor]=useState(true);
+  const [changeIdx,setChangeIdx]=useState(true);
+  const [currentIdx,setCurrentIdx]=useState(4);
+  const [fate,setFate]=useState("");
+  const [nextVisible,setnextVisible]=useState(false);
   const nav = useNavigate();
-
+  
   // Fetch initial data
   useEffect(() => {
     (async () => {
@@ -43,6 +47,7 @@ export default function GameScreen() {
       );
       console.log("Next chapter response:", res.data);
       setCurrentStory(res.data.story.story);
+      setnextVisible(false);
     })();
   }, [current_chap]);
 
@@ -60,12 +65,11 @@ export default function GameScreen() {
       let raw = res.data._options; // your backend field
       console.log("Raw _options:", raw);
 
-      // 1️⃣ Remove outer quotes if they exist
+     
       if (typeof raw === "string" && raw.startsWith('"') && raw.endsWith('"')) {
         raw = raw.slice(1, -1);
       }
 
-      // 2️⃣ Remove ```json and ``` triple backticks
       if (typeof raw === "string") {
         raw = raw.replace(/^```json\s*|```$/g, "").trim();
       }
@@ -87,18 +91,54 @@ export default function GameScreen() {
 function changeCorloring(e){
 
 if(changeColor){e.target.style.color="red";
-  setChangeColor(false);
+  setChangeColor(false)
+  
 }
 
+
+
 }
+
+function getIdx(key){
+  if (changeIdx) {
+  setCurrentIdx(k=>k=Number(key));
+  setChangeIdx(false);
+  }
+  
+  
+}
+useEffect(()=>{
+  console.log(currentIdx);
+ try{
+   console.log(options[Number(currentIdx)-1].fate);
+   setFate(options[Number(currentIdx)-1].fate);
+   if (fate.includes("gameover")){
+       setTimeout(() => {
+         alert("you died ");
+       }, 2000);
+   }
+   else {
+        setTimeout(() => {
+         
+         setnextVisible(true);
+       }, 2000);
+   }
+   
+ }
+ catch(e){
+
+ }
+  
+},[currentIdx])
   return (
     <div>
+      <button onClick={() => nav("/home")}>Home</button>
       <h1>Chapter: {current_chap}</h1>
       <h2>{current_story}</h2>
 
       <button onClick={() => get_options()}>Choose action</button>
-      <button onClick={() => setCurrentChap((c) => c + 1)}>Next</button>
-      <button onClick={() => nav("/home")}>Home</button>
+     
+      
 
       {/* Display options */}
       {options.length > 0 && (
@@ -109,14 +149,18 @@ if(changeColor){e.target.style.color="red";
               {/* <strong>Option {opt.option}:</strong> */}
               <button onClick={(e)=>{
                 changeCorloring(e);
+                getIdx(opt.option)
+                
                 
               }}><h2>{opt.action}</h2> </button>
-              {/* <p><strong>Fate:</strong> {opt.fate}</p>
-              <p><strong>Character Eval:</strong> {opt.character_evalution}</p> */}
+             
             </div>
           ))}
         </div>
       )}
+
+      {fate&&<div> <h1>Fate:{fate}</h1></div>}
+      {nextVisible&& <button onClick={() => setCurrentChap((c) => c + 1)}>Next</button>}
     </div>
   );
 }

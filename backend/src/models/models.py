@@ -6,7 +6,7 @@ class UserLogin(BaseModel):
 
 class conversations(BaseModel):
     chapter:int
-    options:str
+    options:List
     selected:str
 
 class evaluation(BaseModel):
