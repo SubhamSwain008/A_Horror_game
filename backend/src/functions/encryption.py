@@ -11,6 +11,7 @@ ACCESS_EXPIRE= int(os.getenv('ACCESS_TOKEN_EXPIRES_IN', '300'))
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
 
+
 def password_hasing(password:str) -> str:
 
     return password_contex.hash(password)

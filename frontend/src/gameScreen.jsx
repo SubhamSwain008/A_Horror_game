@@ -44,11 +44,23 @@ export default function GameScreen() {
       setCurrentStory(res.data.story.story)
     })();
   }, [current_chap]);
-
+function get_options(){
+   const token = localStorage.getItem("token");
+  (async()=>{
+    const res=await axios.get("http://localhost:8000/options", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(res)
+  })()
+}
   return (
     <div>
       <h1>Chapter: {current_chap}</h1>
       <h2>{current_story}</h2>
+      <button onClick={()=>get_options()}>Choose action</button>
       {/* Fix: pass function reference, do not mutate state directly */}
       <button onClick={() => setCurrentChap((c) => c + 1)}>Next</button>
       <button onClick={()=>nav('/home')}>Home</button>

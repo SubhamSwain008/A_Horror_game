@@ -4,6 +4,7 @@ from src.models.models import UserLogin ,NextChapter
 from src.functions.encryption import password_hasing ,verify_password, create_jwt
 from src.auth.auth import use_token
 from story import story_array
+from src.functions.llm import get_options
 Route=APIRouter()
 
 try:
@@ -104,9 +105,14 @@ async def next_chapter(chapter:NextChapter,current:dict=Depends(use_token)):
           return {'story':{"story":"End cerdits"}}
 
 @Route.get('/options')
-async def get_options(current:dict=Depends(use_token)):
+async def get_options_for(current:dict=Depends(use_token)):
    try:  
      user=client.The_forest.user_data.find_one({"username":current["username"]})
-     print(user)
+     if user:
+      print(user['username'],user['chapter'],user['character_eval'],user['conversations'])
+      options=get_options(user['chapter'],user['character_eval'],user['conversations'],story_array)
+      print(options)
+     # out=get_options()
+     return {"_message":"user found"}
    except:
         return {"_message":"user not found"}
