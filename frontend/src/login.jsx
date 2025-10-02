@@ -41,6 +41,7 @@ catch(e){
             <input ref={password} type="text" placeholder="password" />
             <button type="submit">Login</button>
             </form>
+            <button onClick={()=>nav('/')}>go to signup</button>
         </div>
         </>
     )

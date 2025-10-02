@@ -11,10 +11,8 @@ gen=os.getenv("GEMINI_KEYY")
 
 
 
-def get_options(current_chapter:int,character:str,conversation:list)->str:
-    story=""
-    for i in story_array:
-        story+="chapter:"+str(i["chapter"])+" "+i["story"]+"\n"
+def get_options(current_chapter:int,character:list,conversation:list,story:list)->str:
+   
 
     client = genai.Client(api_key=gen)
 
@@ -40,6 +38,6 @@ def get_options(current_chapter:int,character:str,conversation:list)->str:
     return str(response.text)
 
 current=0
-character="none as chapter 0"
+character=[{"chapter":-1,"character_evalutaion":"none"}]
 conversation=[{"chapter":-1,"options":"none","selected":"none"}]
-get_options(current,character,conversation)
+get_options(current,character,conversation,story_array)

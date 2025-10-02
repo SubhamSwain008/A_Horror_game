@@ -58,9 +58,9 @@ async def new_game(current:dict=Depends(use_token)):
            return {"_message":"user not found may be try login first"}
       
       updates={
-           "character_eval":"beginer ",
+           "character_eval":[{"chapter":-1,"character_evalutaion":"none"},],
    "chapter":0,
-    "conversations":[],
+    "conversations":[{"chapter":-1,"options":"none","selected":"none"}],
       }
       updated=client.The_forest.user_data.update_one({"username":current["username"]},
                                                      {"$set":updates})
@@ -102,4 +102,11 @@ async def next_chapter(chapter:NextChapter,current:dict=Depends(use_token)):
           updated=client.The_forest.user_data.update_one({"username":current["username"]},
                                                      {"$set":updates})
           return {'story':{"story":"End cerdits"}}
-   
+
+@Route.get('/options')
+async def get_options(current:dict=Depends(use_token)):
+   try:  
+     user=client.The_forest.user_data.find_one({"username":current["username"]})
+     print(user)
+   except:
+        return {"_message":"user not found"}

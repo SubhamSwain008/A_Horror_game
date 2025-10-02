@@ -38,10 +38,12 @@ catch(e){
         <form onSubmit={e=>submit(e)}>
             <input ref={username} type="text " placeholder="username" />
             <input ref={password} type="text" placeholder="password"/>
-            <button type="submit">signin</button>
+            <button type="submit">signup</button>
+            
 
 
         </form>
+        <button onClick={()=>{nav('/login')}}>go to login</button>
          <h1 style={{color:"red"}}>{message}</h1>
     </div>
     </>)

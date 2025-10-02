@@ -5,15 +5,18 @@ class UserLogin(BaseModel):
     password:str
 
 class conversations(BaseModel):
-    chapter:str
-    llm:str
-    player:str
+    chapter:int
+    options:str
+    selected:str
+
+class evaluation(BaseModel):
+    chapter:int
+    character_evalutaion:str
 
 class UserInDB(BaseModel):
     username:str
-    password:str
-    character_eval:str
-    chapter:str
+    character_eval:List[evaluation]
+    chapter:int
     conversations:List[conversations]
     
 class NextChapter(BaseModel):
