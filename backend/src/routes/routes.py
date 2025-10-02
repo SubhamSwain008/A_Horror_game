@@ -105,14 +105,42 @@ async def next_chapter(chapter:NextChapter,current:dict=Depends(use_token)):
           return {'story':{"story":"End cerdits"}}
 
 @Route.get('/options')
-async def get_options_for(current:dict=Depends(use_token)):
-   try:  
-     user=client.The_forest.user_data.find_one({"username":current["username"]})
-     if user:
-      print(user['username'],user['chapter'],user['character_eval'],user['conversations'])
-      options=get_options(user['chapter'],user['character_eval'],user['conversations'],story_array)
-      print(options)
-     # out=get_options()
-     return {"_message":"user found"}
-   except:
-        return {"_message":"user not found"}
+async def get_options_for(current: dict = Depends(use_token)):
+    try:
+        # Fetch user document
+        user = client.The_forest.user_data.find_one({"username": current["username"]})
+        if not user:
+            return {"_message": "user not found"}
+
+        print(user['username'], user.get('chapter'), user.get('character_eval'), user.get('conversations'))
+
+        # Check if we already have cached options for the current chapter
+        if 'cached_options' in user and user.get('chapter') == current.get('chapter'):
+            print("Using cached options")
+            return {"_options": user['cached_options']}
+
+        # Otherwise, generate options
+        try:
+            options = get_options(
+                user.get('chapter', 0),
+                user.get('character_eval', []),
+                user.get('conversations', []),
+                story_array
+            )
+            print("Generated options:", options)
+
+            # Save the generated options in the user document
+            client.The_forest.user_data.update_one(
+                {"username": current["username"]},
+                {"$set": {"cached_options": options}}
+            )
+
+            return {"_options": options}
+
+        except Exception as e:
+            print("LLM failed:", e)
+            return {"_message": "llm failed"}
+
+    except Exception as e:
+        print("Error fetching user:", e)
+        return {"_message": "user fetch failed"}

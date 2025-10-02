@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, timezone
 import jwt
 from dotenv import load_dotenv
 import os
+import json
+import re
 load_dotenv()
 
 password_contex=CryptContext(schemes=["bcrypt"],deprecated="auto")
@@ -26,3 +28,5 @@ def create_jwt(username:dict)->str:
     to_encode.update({"exp":expire})
 
     return jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM) # type: ignore
+
+
