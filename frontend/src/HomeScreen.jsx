@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NewGame from "./functions/new_game.js";
+import vid from "./assets/video.mp4";
 
 export default function HomeScreen() {
   const nav = useNavigate();
@@ -17,7 +18,6 @@ export default function HomeScreen() {
             "Content-Type": "application/json",
           },
         });
-        console.log(res);
         if (res) {
           setUsername(res.data.username);
         }
@@ -47,6 +47,28 @@ export default function HomeScreen() {
 
   return (
     <>
+      {/* Fullscreen looping video background */}
+   <video
+  autoPlay
+  loop
+  muted
+  playsInline
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    zIndex: 1, // <- number, not string
+    filter: "brightness(0.5)", 
+  }}
+>
+  <source src={vid} type="video/mp4" />
+</video>
+
+
+      {/* Foreground content */}
       <div
         style={{
           minHeight: "100vh",
@@ -54,20 +76,20 @@ export default function HomeScreen() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(to bottom, #000000, #1a1a1a)",
           color: "white",
           fontFamily: "'Creepster', cursive",
           gap: "1rem",
           textAlign: "center",
+          zIndex:20
         }}
       >
-        <h1 style={{ color: "#ff0000", marginBottom: "0.5rem" }}>
-          The Forest
+        <h1 style={{ color: "#ff0000", marginBottom: "0.5rem", zIndex:20 }}>
+       Welcome to The Forest
         </h1>
         {username ? (
-          <h2 style={{ color: "#ff6666" }}>Welcome {username}</h2>
+          <h2 style={{ color: "#ff6666" ,zIndex:20 }}> {username}</h2>
         ) : (
-          <h2 style={{ color: "red" }}>
+          <h2 style={{ color: "red" , zIndex:20}}>
             User not found, please logout and login again
           </h2>
         )}
@@ -79,6 +101,7 @@ export default function HomeScreen() {
             gap: "1rem",
             marginTop: "1rem",
             width: "250px",
+             zIndex:20
           }}
         >
           <button

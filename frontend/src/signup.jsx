@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import img5 from "./assets/chapter5.png";
 export default function Signup() {
   const nav = useNavigate();
   const username = useRef(null);
@@ -36,10 +36,24 @@ export default function Signup() {
           alignItems: "center",
           justifyContent: "center",
           background: "linear-gradient(to bottom, #000000, #1a1a1a)",
+          backgroundImage: `url(${img5})`,
+           backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           color: "white",
           fontFamily: "'Creepster', cursive",
         }}
       >
+         {/* dark overlay for spooky readability */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.65)",
+            backdropFilter: "blur(3px)",
+            zIndex: 0,
+          }}
+        />
         <div
           style={{
             padding: "2rem",
@@ -48,10 +62,11 @@ export default function Signup() {
             boxShadow: "0 0 25px rgba(255,0,0,0.3)",
             width: "350px",
             textAlign: "center",
+            zIndex:"100"
           }}
         >
           <h1 style={{ color: "#ff0000", marginBottom: "1rem" }}>
-            The Forest 
+            The Forest - Sign up
           </h1>
 
           <form onSubmit={(e) => submit(e)} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

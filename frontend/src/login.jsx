@@ -1,3 +1,4 @@
+import img5 from "./assets/chapter5.png";
 import axios from "axios";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -33,12 +34,25 @@ export default function Login() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(to bottom, #000000, #1a1a1a)",
+          backgroundImage: `url(${img5})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
           color: "white",
           fontFamily: "'Creepster', cursive",
         }}
       >
-
+        {/* dark overlay for spooky readability */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.65)",
+            backdropFilter: "blur(3px)",
+            zIndex: 0,
+          }}
+        />
 
         <div
           style={{
@@ -48,10 +62,11 @@ export default function Login() {
             boxShadow: "0 0 25px rgba(255,0,0,0.3)",
             width: "350px",
             textAlign: "center",
+            zIndex: 1,
           }}
         >
           <h1 style={{ color: "#ff0000", marginBottom: "1rem" }}>
-            The Forest – Login
+            The Forest - Login
           </h1>
 
           <form
