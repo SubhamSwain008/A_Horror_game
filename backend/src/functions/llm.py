@@ -22,7 +22,8 @@ def get_options(current_chapter:int,character:list,conversation:list,story:list)
             you will aslo provide his fate based on each of 3 option , fate can be either death (game over) of a creative twist or anything that will directly 
             inegrate to next chapter . keep this formating - ("option":number,"action":"","fate":"fate here, if game over (gameover)fate here ","character_evalution":"based on all previous ones in few words only") , you have to include at least 1 game over option but there can be 2. donot metion about future 
             chapters in fate but consider them while deciding. story is supernatural so even wildest and randomest imaginations is upon you. but 
-            fates can't contradicts next chapter story and must maintain dailouges  (strict warning) , keep fates bit short if possible . always give json format output always and give it like oprtion_for_chapter:[inside of the array 3 dicts of option] "
+            fates can't contradicts next chapter story and must maintain dailouges  (strict warning) , keep fates bit short if possible . always give json format output always and give it like option_for_chapter:[inside of the array 3 dicts of option] ( not like option_for_chapter1 or2)  spell gameover only like 
+            gameover not like Game over or Gameover or anything."
                 
                 here is the story :{story} ,
                 character_evaluation:{character},

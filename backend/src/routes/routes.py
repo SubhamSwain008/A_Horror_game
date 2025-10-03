@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Depends
 from src.config.db import client
-from src.models.models import UserLogin ,NextChapter
+from src.models.models import UserLogin ,NextChapter,UserLevelData
 from src.functions.encryption import password_hasing ,verify_password, create_jwt
 from src.auth.auth import use_token
 from story import story_array
@@ -61,7 +61,7 @@ async def new_game(current:dict=Depends(use_token)):
       updates={
            "character_eval":[{"chapter":-1,"character_evalutaion":"none"},],
    "chapter":0,
-    "conversations":[{"chapter":-1,"options":"none","selected":"none"}],
+    "conversations":[{"chapter":-1,"options":"none"}],
       }
       updated=client.The_forest.user_data.update_one({"username":current["username"]},
                                                      {"$set":updates})
@@ -113,34 +113,38 @@ async def get_options_for(current: dict = Depends(use_token)):
             return {"_message": "user not found"}
 
         print(user['username'], user.get('chapter'), user.get('character_eval'), user.get('conversations'))
+        options=get_options(user.get('chapter'),user.get('character_eval'),user.get('conversations'),story_array)
+        return {"_options": options}
 
-        # Check if we already have cached options for the current chapter
-        if 'cached_options' in user and user.get('chapter') == current.get('chapter'):
-            print("Using cached options")
-            return {"_options": user['cached_options']}
-
-        # Otherwise, generate options
-        try:
-            options = get_options(
-                user.get('chapter', 0),
-                user.get('character_eval', []),
-                user.get('conversations', []),
-                story_array
-            )
-            print("Generated options:", options)
-
-            # Save the generated options in the user document
-            client.The_forest.user_data.update_one(
-                {"username": current["username"]},
-                {"$set": {"cached_options": options}}
-            )
-
-            return {"_options": options}
-
-        except Exception as e:
+    except Exception as e:
             print("LLM failed:", e)
             return {"_message": "llm failed"}
 
-    except Exception as e:
-        print("Error fetching user:", e)
-        return {"_message": "user fetch failed"}
+
+    
+@Route.put('/userdata')
+def get_user_updated_data(user:UserLevelData,current: dict = Depends(use_token)):
+     
+    
+     upadted=client.The_forest.user_data.find_one({"username": current["username"]})
+     print(upadted)
+     if upadted:
+          newcharEval={
+          " chapter":upadted.get("chapter")-1,
+          "character_evalutaion":user.character_eval
+          }
+          new_convo={
+            "chapter":upadted.get("chapter")-1,
+            "options":user.conversations,
+          }
+          result =client.The_forest.user_data.update_one(
+        {"username": current["username"]},
+        {
+            "$push": {
+                "character_eval":newcharEval,
+                "conversations": new_convo
+            }
+        }
+    )
+
+     return {"_message":"sucessfully recived"}
