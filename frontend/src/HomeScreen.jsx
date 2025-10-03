@@ -72,6 +72,7 @@ export default function HomeScreen() {
       <div
         style={{
           minHeight: "100vh",
+          minWidth:"100%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
